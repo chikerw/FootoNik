@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FotoNik - Профессиональная фотография</title>
+    <style>
+        /* Основные стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #ffffff;
+            color: #333333;
+            line-height: 1.6;
+        }
+        
+        a {
+            text-decoration: none;
+            color: #2a6eb8;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #1a4a7a;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Шапка с фото */
+        .header-with-photo {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .header-photo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+        
+        .header-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            z-index: 2;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 3;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Навигация */
+        .main-nav {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2a6eb8;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 30px;
+        }
+        
+        nav ul li a {
+            color: #333333;
+            font-weight: 500;
+            font-size: 16px;
+        }
+        
+        nav ul li a:hover {
+            color: #2a6eb8;
+        }
+        
+        /* Текст в шапке */
+        .header-text {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            padding-bottom: 100px;
+        }
+        
+        .header-text h1 {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: #1a4a7a;
+            font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
+        }
+        
+        .header-text p {
+            font-size: 22px;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            color: #333333;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #2a6eb8;
+            color: white;
+            padding: 15px 35px;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 18px;
+            transition: all 0.3s;
+            border: 2px solid #2a6eb8;
+        }
+        
+        .btn:hover {
+            background-color: transparent;
+            color: #2a6eb8;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: #2a6eb8;
+            border: 2px solid #2a6eb8;
+            margin-left: 15px;
+        }
+        
+        .btn-outline:hover {
+            background-color: #2a6eb8;
+            color: white;
+        }
+        
+        /* Обо мне */
+        .about {
+            padding: 100px 0;
+            background-color: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+            font-size: 36px;
+            color: #1a4a7a;
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background-color: #2a6eb8;
+            margin: 20px auto 0;
+        }
+        
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+        
+        .about-text {
+            flex: 1;
+        }
+        
+        .about-text h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #2a6eb8;
+        }
+        
+        .about-text p {
+            margin-bottom: 15px;
+            color: #555555;
+            line-height: 1.8;
+        }
+        
+        .about-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        /* Портфолио */
+        .portfolio {
+            padding: 100px 0;
+            background-color: #f8faff;
+        }
+        
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .portfolio-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+        
+        .portfolio-item:hover {
+            transform: translateY(-10px);
+        }
+        
+        .portfolio-item img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .portfolio-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(26, 74, 122, 0.8), transparent);
+            color: white;
+            padding: 20px;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+        
+        .portfolio-item:hover .portfolio-overlay {
+            transform: translateY(0);
+        }
+        
+        /* Услуги */
+        .services {
+            padding: 100px 0;
+            background-color: white;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .service-card {
+            background-color: #f8faff;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .service-icon {
+            font-size: 40px;
+            color: #2a6eb8;
+            margin-bottom: 20px;
+        }
+        
+        .service-card h3 {
+            margin-bottom: 15px;
+            color: #1a4a7a;
+            font-size: 22px;
+        }
+        
+        .service-card p {
+            color: #555555;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+        
+        .service-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2a6eb8;
+        }
+        
+        /* Контакты */
+        .contact {
+            padding: 100px 0;
+            background-color: #f8faff;
+        }
+        
+        .contact-content {
+            display: flex;
+            gap: 50px;
+        }
+        
+        .contact-info {
+            flex: 1;
+        }
+        
+        .contact-info h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #1a4a7a;
+        }
+        
+        .contact-info p {
+            margin-bottom: 15px;
+            color: #555555;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #2a6eb8;
+            color: white;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            background-color: #1a4a7a;
+            transform: translateY(-3px);
+        }
+        
+        .contact-form {
+            flex: 1;
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .contact-form h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #1a4a7a;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555555;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #dddddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #2a6eb8;
+            outline: none;
+        }
+        
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        
+        /* Подвал */
+        footer {
+            background-color: #1a4a7a;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .footer-text {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .footer-links a {
+            color: white;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #a8c6f0;
+        }
+        
+        .copyright {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 1200px) {
+            .header-text h1 {
+                font-size: 50px;
+            }
+            
+            .header-text p {
+                font-size: 20px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .portfolio-grid,
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .about-content,
+            .contact-content {
+                flex-direction: column;
+            }
+            
+            .about-image {
+                order: -1;
+                margin-bottom: 30px;
+            }
+            
+            .btn-outline {
+                margin-left: 0;
+                margin-top: 15px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-text h1 {
+                font-size: 36px;
+            }
+            
+            .header-text p {
+                font-size: 18px;
+            }
+            
+            .section-title {
+                font-size: 30px;
+            }
+            
+            nav ul {
+                display: none;
+            }
+            
+            .header-text .btn {
+                padding: 12px 25px;
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .portfolio-grid,
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-text h1 {
+                font-size: 32px;
+            }
+            
+            .contact-form {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка с фото -->
+    <div class="header-with-photo">
+        <img src="https://sun9-55.userapi.com/impg/vaY52zhUymEla1G8TF28t7PmA8l7yIIfOzraCw/BSGyRL0DTOQ.jpg?size=2003x1126&quality=95&sign=3416c4c2725263a34d1d23011577774e&type=album">
+        <div class="header-overlay"></div>
+        
+        <!-- Навигация -->
+        <nav class="main-nav">
+            <div class="container nav-container">
+                <div class="logo">FOTONIK</div>
+                <nav>
+                    <ul>
+                        <li><a href="#about">Обо мне</a></li>
+                        <li><a href="#portfolio">Портфолио</a></li>
+                        <li><a href="#services">Услуги</a></li>
+                        <li><a href="#contact">Контакты</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </nav>
+        
+        <!-- Текст в шапке -->
+        <div class="container header-content">
+            <div class="header-text">
+                <h1>Профессиональная фотография</h1>
+                <p>Запечатлеваю ваши эмоции и моменты с художественным подходом и вниманием к деталям</p>
+                <div>
+                    <a href="#contact" class="btn">Записаться на съемку</a>
+                    <a href="#portfolio" class="btn btn-outline">Посмотреть работы</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Обо мне -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">Обо мне</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Привет, я Rjkz - профессиональный фотограф</h3>
+                    <p>Я занимаюсь фотографией более 2 лет, специализируясь на портретной и конценртной съемке. Моя цель - не просто сделать красивые снимки, а передать эмоции и историю через фотографию.</p>
+                    <p>Каждый проект для меня - это возможность создать что-то уникальное. Я внимательно отношусь к пожеланиям клиентов и стараюсь воплотить их видение в реальность.</p>
+                    <p>В работе использую профессиональное оборудование Nikon, а также владею всеми необходимыми навыками постобработки в Adobe Photoshop и Lightroom.</p>
+                </div>
+                <div class="about-image">
+                    <img src="https://sun9-7.userapi.com/impg/RQrnDfRfhNKHkhJ5bhoA1YDJgJ43tTfMmxWa8g/Mj9LFViKnbI.jpg?size=831x540&quality=95&sign=1180c225d6c683dc4c980457680c0c09&type=album">
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Портфолио -->
+    <section id="portfolio" class="portfolio">
+        <div class="container">
+            <h2 class="section-title">Портфолио</h2>
+            <div class="portfolio-grid">
+                <div class="portfolio-item">
+                    <https://sun9-51.userapi.com/impg/T9Qipg6GMlte2d-L66s7Y82O4jyVdueym9lMLA/UpVrgo_5jCE.jpg?size=2560x1695&quality=95&sign=c7253c4ec635906a722e4ef5f878cc2c&type=album">
+                    <img src="https://sun9-68.userapi.com/impg/9UrnWn5J_TWAM0E10fql-LBFotJR5pFBb0A4zA/I4E5l3jLQm8.jpg?size=2560x1695&quality=95&sign=77168c6ea1b638ea1e98dbe3b3055934&type=album">
+                    <div class="portfolio-overlay">
+                        <h3>Съемка концертов</h3>
+                        <p>Фото с концерта Отпетых мошенников</p>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <https://sun9-21.userapi.com/impg/ICOq_ptrSN8qHpkpmqYuf7W7BpuFbCkW2jxm7w/ifjqRmZDSCM.jpg?size=2560x1696&quality=95&sign=107a94c72ae34a9e32b3e3d643615bb1&type=album">
+                    <img src="https://sun9-21.userapi.com/impg/ICOq_ptrSN8qHpkpmqYuf7W7BpuFbCkW2jxm7w/ifjqRmZDSCM.jpg?size=2560x1696&quality=95&sign=107a94c72ae34a9e32b3e3d643615bb1&type=album">
+                    <div class="portfolio-overlay">
+                        <h3>Съёмка мероприятий</h3>
+                        <p>Фото соревнований по гандболу</p>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <img src="https://sun9-32.userapi.com/impg/ZcmuC-NZiopucuwjPvOREnB8oqyiDRSgvbE1rw/FQBk1Yc6gbk.jpg?size=2560x1695&quality=95&sign=5370e786de225d30792d2cdd77c6e764&type=album">
+                    <div class="portfolio-overlay">
+                        <h3>Групповая съмка</h3>
+                        <p>Съёмка театра Балаганчик</p>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <img src="https://sun9-12.userapi.com/impg/0xK9TA8_83ehg0L9wZQ3LovHsFdKx8TYkkm1sg/tVOtWFN6rmU.jpg?size=1430x2160&quality=95&sign=d4c08953f9fb97913b68f2da114bcb67&type=album">
+                    <div class="portfolio-overlay">
+                        <h3>Портретная съемка</h3>
+                        <p> </p>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <img src="https://sun9-16.userapi.com/impg/aolsb2yfOql_L1UVtoGy1QDFxFvGnrXap48-Uw/llveJUVwXq8.jpg?size=2560x1695&quality=95&sign=3e40d2290837eb141cb205f708b26984&type=album">
+                    <div class="portfolio-overlay">
+                        <h3>Съмка выступлений</h3>
+                        <p>Тодес</p>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <img src="https://sun9-14.userapi.com/impg/R4FhIN4tTHqFFo2WHgQQacTCmkpWRThusVMpkA/b3pJcHhAEoA.jpg?size=2560x1695&quality=95&sign=3fc7e5ef3c47011565c50c169addeece&type=album">
+                    <div class="portfolio-overlay">
+                        <h3>Съёмка номеров</h3>
+                        <p>Тодес</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Услуги -->
+    <section id="services" class="services">
+        <div class="container">
+            <h2 class="section-title">Услуги</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">📷</div>
+                    <h3>Индивидуальная съемка</h3>
+                    <p>Профессиональная портретная съемка в студии или на локации. Подбор образа и реквизита.</p>
+                    <div class="service-price">от 1 000 ₽</div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">💍</div>
+                    <h3>Свадебная съемка</h3>
+                    <p>Полное сопровождение свадебного дня. Репортажная и постановочная съемка.</p>
+                    <div class="service-price">от 20 000 ₽</div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">👨‍👩‍👧‍👦</div>
+                    <h3>Групповая съемка</h3>
+                    <p>Теплые и живые кадры компании в естественной обстановке.</p>
+                    <div class="service-price">от 2 000 ₽</div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🛍️</div>
+                    <h3>Художественная</h3>
+                    <p>Качественные фото портретов в особом стиле.</p>
+                    <div class="service-price">от 1 000 ₽</div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🎭</div>
+                    <h3>Съмка концертов</h3>
+                    <p>Съмка концертов по всему городу.</p>
+                    <div class="service-price">от 5 000 ₽</div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🎤</div>
+                    <h3>Съёмка мероприятий</h3>
+                    <p>Динамичные и эмоциональные кадры с мероприятий.</p>
+                    <div class="service-price">от 3 000 ₽</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Контакты -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Контакты</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Свяжитесь со мной</h3>
+                    <p><strong>Телефон:</strong> +7 (964) 295-40-86</p>
+                    <p><strong>Email:</strong> menshio@yandex.ru</p>
+                    <p><strong>Адрес студии:</strong> г. Архангельск</p>
+                    <p>Работаю как в студии, так и на выезде.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Instagram">📸</a>
+                        <a href="#" aria-label="VK">🔵</a>
+                        <a href="#" aria-label="Telegram">✈️</a>
+                        <a href="#" aria-label="WhatsApp">💬</a>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <h3>Форма обратной связи</h3>
+                    <form>
+                        <div class="form-group">
+                            <label for="name">Ваше имя</label>
+                            <input type="text" id="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Телефон</label>
+                            <input type="tel" id="phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Сообщение</label>
+                            <textarea id="message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">Отправить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Подвал -->
+    <footer>
+        <div class="container">
+            <div class="footer-text">FotoNik - профессиональная фотография</div>
+            <div class="footer-links">
+                <a href="#about">Обо мне</a>
+                <a href="#portfolio">Портфолио</a>
+                <a href="#services">Услуги</a>
+                <a href="#contact">Контакты</a>
+            </div>
+            <div class="copyright">© 2023 FotoNik. Все права защищены.</div>
+        </div>
+    </footer>
+</body>
+</html>
